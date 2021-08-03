@@ -4,9 +4,9 @@
 name: Build and deploy ASP.Net Core app to Azure Web App - day-care-pick-up-support-stg
 
 on:
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
   workflow_dispatch:
 
 jobs:
