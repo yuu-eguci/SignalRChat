@@ -26,6 +26,11 @@ namespace SignalRChat.Pages
         public void OnGet()
         {
             RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
+
+            Console.WriteLine("Console.WriteLine からのログ!!!!");
+            _logger.Log(LogLevel.Information, "_logger.Log LogLevel.Information からのログ!!!!");
+            _logger.LogInformation("_logger.LogInformation からのログ!!!!");
+            _logger.LogError("_logger.LogError からのログ!!!!");
         }
     }
 }

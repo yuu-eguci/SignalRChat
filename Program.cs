@@ -17,6 +17,8 @@ namespace SignalRChat
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
+            // NOTE: 今回欲しい Console log provider は既定のセットに含まれています。
+            //       ClearProviders() は行いません。
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
