@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace SignalRChat
 {
@@ -13,7 +14,12 @@ namespace SignalRChat
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var host = CreateHostBuilder(args).Build();
+
+            var logger = host.Services.GetRequiredService<ILogger<Program>>();
+            logger.LogInformation("CreateHostBuilder(args).Build() によって host が出来たぞ!!!!");
+
+            host.Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
