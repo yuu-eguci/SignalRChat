@@ -31,12 +31,20 @@ namespace SignalRChat
             services.AddSignalR();
             // CORS を Configure method で使う準備です。
             services.AddCors();
+            // appsettings.json を AppSettings にロードします。
+            // services に足すことで Dependency Injection してくれて、コントローラで取得できるようになります。
             services.Configure<AppSettings>(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
+        public void Configure(
+            IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
+            string webBaseUrl = Configuration["WebBaseUrl"];
+            logger.LogInformation($"Configuration[WebBaseUrl]: {webBaseUrl}");
+            string envName = Configuration["EnvName"];
+            logger.LogInformation($"Configuration[EnvName]: {envName}");
+
             if (env.IsDevelopment())
             {
                 logger.LogInformation("Startup.Configure からログ。 env.IsDevelopment でした!!!!");
@@ -56,8 +64,7 @@ namespace SignalRChat
             // Make sure the CORS middleware is ahead of SignalR.
             app.UseCors(builder =>
             {
-                // TODO: 環境変数か appsettings から取得する。
-                builder.WithOrigins("http://localhost:8080")
+                builder.WithOrigins(webBaseUrl)
                     .AllowAnyHeader()
                     .WithMethods("GET", "POST")
                     .AllowCredentials();
@@ -67,7 +74,7 @@ namespace SignalRChat
             {
                 KeepAliveInterval = TimeSpan.FromSeconds(120),
             };
-            webSocketOptions.AllowedOrigins.Add("http://localhost:8080");
+            webSocketOptions.AllowedOrigins.Add(webBaseUrl);
             app.UseWebSockets(webSocketOptions);
 
             app.UseRouting();
