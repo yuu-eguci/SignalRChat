@@ -1,34 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
-using SignalRChat.Models;
-using Microsoft.Extensions.Configuration;
 
-namespace SignalRChat.Pages
+namespace SignalRChat.Pages;
+
+public class IndexModel(ILogger<IndexModel> logger, IConfiguration configuration) : PageModel
 {
-    public class IndexModel : PageModel
+    public void OnGet()
     {
-        private readonly ILogger<IndexModel> _logger;
-        private readonly IConfiguration _configuration;
-
-        public IndexModel(ILogger<IndexModel> logger, IConfiguration configuration)
-        {
-            _logger = logger;
-            _configuration = configuration;
-        }
-
-        public void OnGet()
-        {
-            Console.WriteLine("Console.WriteLine からのログ!!!!");
-            _logger.Log(LogLevel.Information, "_logger.Log LogLevel.Information からのログ!!!!");
-            _logger.LogInformation("_logger.LogInformation からのログ!!!!");
-            _logger.LogError("_logger.LogError からのログ!!!!");
-            string webBaseUrl = _configuration["WebBaseUrl"];
-            _logger.LogInformation($"Configuration[WebBaseUrl]: {webBaseUrl}");
-        }
+        Console.WriteLine("Console.WriteLine からのログ!!!!");
+        logger.Log(LogLevel.Information, "_logger.Log LogLevel.Information からのログ!!!!");
+        logger.LogInformation("_logger.LogInformation からのログ!!!!");
+        logger.LogError("_logger.LogError からのログ!!!!");
+        logger.LogInformation("Configuration[WebBaseUrl]: {WebBaseUrl}", configuration["WebBaseUrl"]);
     }
 }

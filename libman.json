@@ -3,11 +3,22 @@
   "defaultProvider": "unpkg",
   "libraries": [
     {
-      "library": "@microsoft/signalr@latest",
+      "library": "@microsoft/signalr@10.0.11",
       "destination": "wwwroot/js/signalr",
       "files": [
         "dist/browser/signalr.js",
         "dist/browser/signalr.min.js"
+      ]
+    },
+    {
+      "library": "bootstrap@5.3.8",
+      "destination": "wwwroot/lib/bootstrap",
+      "files": [
+        "LICENSE",
+        "dist/css/bootstrap.min.css",
+        "dist/css/bootstrap.min.css.map",
+        "dist/js/bootstrap.bundle.min.js",
+        "dist/js/bootstrap.bundle.min.js.map"
       ]
     }
   ]

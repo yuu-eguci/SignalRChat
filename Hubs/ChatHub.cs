@@ -1,23 +1,25 @@
 using Microsoft.AspNetCore.SignalR;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 
-namespace SignalRChat.Hubs
+namespace SignalRChat.Hubs;
+
+public class ChatHub(ILogger<ChatHub> logger) : Hub
 {
-    public class ChatHub : Hub
+    public const int MaxUserLength = 50;
+    public const int MaxMessageLength = 500;
+
+    // 接続されたクライアントから呼び出されます。
+    public async Task SendMessage(string user, string message)
     {
-        private readonly ILogger<ChatHub> _logger;
-
-        public ChatHub(ILogger<ChatHub> logger)
+        if (string.IsNullOrWhiteSpace(user) || user.Length > MaxUserLength)
         {
-            this._logger = logger;
+            throw new HubException($"User は 1 から {MaxUserLength} 文字で入力してください。");
+        }
+        if (string.IsNullOrWhiteSpace(message) || message.Length > MaxMessageLength)
+        {
+            throw new HubException($"Message は 1 から {MaxMessageLength} 文字で入力してください。");
         }
 
-        // 接続されたクライアントから呼び出されます。
-        public async Task SendMessage(string user, string message)
-        {
-            _logger.LogInformation($"ChatHub.SendMessage からのログ!!!! 飛んできた引数は…… {user}: {message}");
-            await Clients.All.SendAsync("ReceiveMessage", user, message);
-        }
+        logger.LogInformation("ChatHub.SendMessage からのログ!!!! 飛んできた引数は…… {User}: {Message}", user, message);
+        await Clients.All.SendAsync("ReceiveMessage", user, message);
     }
 }

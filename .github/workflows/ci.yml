@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+
+      - name: Lint
+        run: dotnet format SignalRChat.slnx --verify-no-changes
+
+      - name: Test
+        run: dotnet test --solution SignalRChat.slnx
+
+      - name: Docker build
+        run: docker build -t signalrchat .

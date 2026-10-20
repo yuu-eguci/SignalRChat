@@ -1,15 +1,15 @@
-﻿@page
+@page
 @model IndexModel
     <div class="container">
         <div class="row">&nbsp;</div>
         @* 名前およびメッセージ テキスト用のテキスト ボックスと送信ボタン *@
         <div class="row">
             <div class="col-2">User</div>
-            <div class="col-4"><input type="text" id="userInput" /></div>
+            <div class="col-4"><input type="text" id="userInput" maxlength="@SignalRChat.Hubs.ChatHub.MaxUserLength" /></div>
         </div>
         <div class="row">
             <div class="col-2">Message</div>
-            <div class="col-4"><input type="text" id="messageInput" /></div>
+            <div class="col-4"><input type="text" id="messageInput" maxlength="@SignalRChat.Hubs.ChatHub.MaxMessageLength" /></div>
         </div>
         <div class="row">&nbsp;</div>
         <div class="row">
@@ -30,6 +30,6 @@
         </div>
     </div>
 @* SignalR へのスクリプト参照。 *@
-<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/signalr/dist/browser/signalr.min.js"></script>
 @* 追加コード。 *@
-<script src="~/js/chat.js"></script>
+<script src="~/js/chat.js" asp-append-version="true"></script>

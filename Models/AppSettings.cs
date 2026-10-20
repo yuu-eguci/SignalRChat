@@ -1,9 +1,8 @@
-namespace SignalRChat.Models
-{
-    public class AppSettings
-    {
-        public string WebBaseUrl { get; set; }
+namespace SignalRChat.Models;
 
-        public string EnvName { get; set; }
-    }
+public class AppSettings
+{
+    public string WebBaseUrl { get; set; } = "";
+
+    public string EnvName { get; set; } = "";
 }
