@@ -44,12 +44,26 @@ app.UseCors(policy =>
         .AllowCredentials();
 });
 
-var webSocketOptions = new WebSocketOptions
+app.UseWebSockets(new WebSocketOptions
 {
     KeepAliveInterval = TimeSpan.FromSeconds(120),
-};
-webSocketOptions.AllowedOrigins.Add(settings.WebBaseUrl);
-app.UseWebSockets(webSocketOptions);
+});
+
+// WebSocket は CORS の対象外なので、同一オリジンと WebBaseUrl 以外からの接続を拒否します。
+app.Use(async (context, next) =>
+{
+    var origin = context.Request.Headers.Origin.ToString();
+    var sameOrigin = $"{context.Request.Scheme}://{context.Request.Host}";
+    if (context.WebSockets.IsWebSocketRequest
+        && origin.Length > 0
+        && !string.Equals(origin, sameOrigin, StringComparison.OrdinalIgnoreCase)
+        && !string.Equals(origin, settings.WebBaseUrl, StringComparison.OrdinalIgnoreCase))
+    {
+        context.Response.StatusCode = StatusCodes.Status403Forbidden;
+        return;
+    }
+    await next(context);
+});
 
 app.UseRouting();
 

@@ -47,7 +47,7 @@ docker compose run --rm sdk dotnet format SignalRChat.slnx
 
 | キー | 内容 |
 | --- | --- |
-| `WebBaseUrl` | CORS と WebSocket で許可する外部フロントエンドのオリジン |
+| `WebBaseUrl` | CORS と WebSocket で許可する外部フロントエンドのオリジン (同一オリジンは常に許可) |
 | `EnvName` | ログに出す環境名 |
 
 - 環境ごとの値は `appsettings.{Environment}.json`。
