@@ -1,6 +1,6 @@
 @page
 @model IndexModel
-    <div class="container">
+    <form id="chatForm" class="container">
         <div class="row">&nbsp;</div>
         @* 名前およびメッセージ テキスト用のテキスト ボックスと送信ボタン *@
         <div class="row">
@@ -14,10 +14,10 @@
         <div class="row">&nbsp;</div>
         <div class="row">
             <div class="col-6">
-                <input type="button" id="sendButton" value="Send Message" />
+                <input type="submit" id="sendButton" value="Send Message" />
             </div>
         </div>
-    </div>
+    </form>
     <div class="row">
         <div class="col-12">
             <hr />

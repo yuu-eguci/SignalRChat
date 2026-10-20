@@ -15,6 +15,8 @@ public class PagesTests(WebApplicationFactory<Program> factory)
         var html = await client.GetStringAsync("/", TestContext.Current.CancellationToken);
 
         Assert.Contains("id=\"messageInput\"", html);
+        Assert.Contains("<form id=\"chatForm\"", html);
+        Assert.Contains("<input type=\"submit\" id=\"sendButton\"", html);
         Assert.Contains("js/signalr/dist/browser/signalr.min.js", html);
         Assert.Contains("js/chat.js", html);
     }

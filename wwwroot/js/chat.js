@@ -32,14 +32,16 @@ connection.start().then(() => {
     sendButton.disabled = false;
 }).catch((err) => console.error(err.toString()));
 
-// ハンドラーを送信ボタンに追加します。
+// ハンドラーをフォームの送信 (送信ボタンまたは Enter キー) に追加します。
 // このハンドラーはハブにメッセージを送信します。
-sendButton.addEventListener("click", (event) => {
+document.getElementById("chatForm").addEventListener("submit", (event) => {
+    event.preventDefault();
     const user = document.getElementById("userInput").value;
-    const message = document.getElementById("messageInput").value;
-    connection.invoke("SendMessage", user, message).catch((err) => {
+    const messageInput = document.getElementById("messageInput");
+    connection.invoke("SendMessage", user, messageInput.value).then(() => {
+        messageInput.value = "";
+    }).catch((err) => {
         console.error(err.toString());
         alert(err.message);
     });
-    event.preventDefault();
 });
