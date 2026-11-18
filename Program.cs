@@ -10,6 +10,8 @@ builder.Services.AddRazorPages();
 builder.Services.AddSignalR();
 // CORS を使う準備です。
 builder.Services.AddCors();
+// コンテナのヘルスチェック用です。
+builder.Services.AddHealthChecks();
 // appsettings.json を AppSettings にロードします。
 // services に足すことで Dependency Injection してくれて、コントローラで取得できるようになります。
 builder.Services.Configure<AppSettings>(builder.Configuration);
@@ -72,6 +74,7 @@ app.UseAuthorization();
 app.MapRazorPages();
 // SignalR を ルーティングシステムに追加。
 app.MapHub<ChatHub>("/chatHub");
+app.MapHealthChecks("/healthz");
 
 app.Logger.LogInformation("WebApplication が出来たぞ!!!!");
 

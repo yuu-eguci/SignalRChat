@@ -1,3 +1,4 @@
+using System.Net.WebSockets;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -12,7 +13,14 @@ public class ChatHubTests(WebApplicationFactory<Program> factory)
         var connection = new HubConnectionBuilder()
             .WithUrl(
                 new Uri(factory.Server.BaseAddress, "chatHub"),
-                options => options.HttpMessageHandlerFactory = _ => factory.Server.CreateHandler())
+                options =>
+                {
+                    options.HttpMessageHandlerFactory = _ => factory.Server.CreateHandler();
+                    // WebSocket も TestServer を通します。指定しないと実ネットワークの localhost へ接続しようとします。
+                    options.WebSocketFactory = (context, cancellationToken) =>
+                        new ValueTask<WebSocket>(
+                            factory.Server.CreateWebSocketClient().ConnectAsync(context.Uri, cancellationToken));
+                })
             .Build();
         await connection.StartAsync(TestContext.Current.CancellationToken);
         return connection;

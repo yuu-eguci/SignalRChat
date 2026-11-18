@@ -15,15 +15,59 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: ClientApp/.node-version
+
       - uses: actions/setup-dotnet@v6
         with:
           global-json-file: global.json
 
-      - name: Lint
+      - name: ClientApp install
+        working-directory: ClientApp
+        run: npm ci
+
+      - name: ClientApp lint
+        working-directory: ClientApp
+        run: npm run lint
+
+      - name: ClientApp test
+        working-directory: ClientApp
+        run: npm test
+
+      - name: ClientApp build (typecheck included)
+        working-directory: ClientApp
+        run: npm run build
+
+      - name: .NET lint
         run: dotnet format SignalRChat.slnx --verify-no-changes
 
-      - name: Test
+      - name: .NET test
         run: dotnet test --solution SignalRChat.slnx
 
-      - name: Docker build
-        run: docker build -t signalrchat .
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Docker test target
+        run: docker build --target test .
+
+      - name: Start app
+        run: docker compose up --build --wait app
+
+      - name: HTTP smoke
+        run: |
+          curl -fsS http://127.0.0.1:8080/healthz | grep -qx Healthy
+          curl -fsS http://127.0.0.1:8080/ | grep -q 'id="chatForm"'
+
+      - name: E2E (browser SignalR send/receive)
+        run: docker compose --profile test run --rm --build e2e
+
+      - name: App logs
+        if: failure()
+        run: docker compose logs app
+
+      - name: Stop
+        if: always()
+        run: docker compose --profile test down

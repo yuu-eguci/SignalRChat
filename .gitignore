@@ -35,3 +35,9 @@ msbuild.wrn
 
 # Visual Studio 2015
 .vs/
+
+# ClientApp
+ClientApp/node_modules/
+# ClientApp の npm run build が出力します。
+wwwroot/js/
+wwwroot/lib/
