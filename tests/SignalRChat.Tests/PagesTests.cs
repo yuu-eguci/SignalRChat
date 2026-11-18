@@ -32,6 +32,17 @@ public class PagesTests(WebApplicationFactory<Program> factory)
     }
 
     [Fact]
+    public async Task HealthEndpoint_ReturnsHealthy()
+    {
+        var client = factory.CreateClient();
+
+        var response = await client.GetAsync("/healthz", TestContext.Current.CancellationToken);
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal("Healthy", await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
+    }
+
+    [Fact]
     public async Task ChatHub_AllowsCorsFromWebBaseUrl()
     {
         var client = factory.CreateClient();

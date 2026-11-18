@@ -1,11 +1,35 @@
 services:
   app:
-    build: .
+    build:
+      context: .
+      target: final
     ports:
-      - "8080:8080"
+      - "127.0.0.1:${SIGNALRCHAT_HTTP_PORT:-8080}:8080"
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       WebBaseUrl: http://localhost:8080
+    healthcheck:
+      # ランタイムイメージには curl がないため、 bash の /dev/tcp で /healthz を確認します。
+      test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/8080 && printf 'GET /healthz HTTP/1.0\\r\\n\\r\\n' >&3 && grep -q '^HTTP/1.1 200' <&3"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 5s
+    networks:
+      default:
+        # Chromium は HSTS preload の .app TLD と同じ名前の app を HTTPS で開くため、 E2E では別名を使います。
+        aliases: ["signalrchat"]
+
+  e2e:
+    build:
+      context: .
+      target: e2e
+    profiles: ["test"]
+    depends_on:
+      app:
+        condition: service_healthy
+    environment:
+      BASE_URL: http://signalrchat:8080
 
   sdk:
     image: mcr.microsoft.com/dotnet/sdk:10.0

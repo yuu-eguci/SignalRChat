@@ -1,7 +1,23 @@
+# 許可したファイルだけをビルドコンテキストに含めます。
+*
+!.editorconfig
+!global.json
+!SignalRChat.csproj
+!SignalRChat.slnx
+!Program.cs
+!Hubs/
+!Models/
+!Pages/
+!appsettings.json
+!appsettings.Production.json
+!appsettings.Staging.json
+!wwwroot/
+!ClientApp/
+!tests/
+
+# 許可したディレクトリ内でも、生成物と依存パッケージは含めません。
 **/bin/
 **/obj/
-.git/
-.github/
-.vscode/
-tests/
-docs/
+ClientApp/node_modules/
+wwwroot/js/
+wwwroot/lib/
